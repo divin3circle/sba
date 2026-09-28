@@ -84,7 +84,7 @@ func (q *Queries) GetTransfersByAccountID(ctx context.Context, arg GetTransfersB
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Transfer
+	items := []Transfer{}
 	for rows.Next() {
 		var i Transfer
 		if err := rows.Scan(
