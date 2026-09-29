@@ -6,12 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/divin3circle/sba/util"
 	_ "github.com/jackc/pgx/v5/stdlib"
-)
-
-const (
-	dbDriver     = "pgx"
-	sourceString = "postgresql://postgres:postgres@localhost:5432/sba_db?sslmode=disable"
 )
 
 var (
@@ -21,7 +17,11 @@ var (
 
 func TestMain(m *testing.M) {
 	var err error
-	testDB, err = sql.Open(dbDriver, sourceString)
+	config, err := util.LoadConfig("../..")
+	if err != nil {
+		log.Fatal("Failed to load test config", err)
+	}
+	testDB, err = sql.Open(config.DBDriver, config.SourceString)
 	if err != nil {
 		log.Fatal("connection to test db failed!", err)
 	}

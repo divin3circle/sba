@@ -6,17 +6,16 @@ import (
 
 	"github.com/divin3circle/sba/api"
 	db "github.com/divin3circle/sba/db/sqlc"
+	"github.com/divin3circle/sba/util"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
-const (
-	dbDriver      = "pgx"
-	sourceString  = "postgresql://postgres:postgres@localhost:5432/sba_db?sslmode=disable"
-	serverAddress = "0.0.0.0:8080"
-)
-
 func main() {
-	conn, err := sql.Open(dbDriver, sourceString)
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("Failed to load configuration variables", err)
+	}
+	conn, err := sql.Open(config.DBDriver, config.SourceString)
 	if err != nil {
 		log.Fatal("Failed to connect to DB", err)
 	}
@@ -24,7 +23,7 @@ func main() {
 	sbaStore := db.NewStore(conn)
 	sbaServer := api.NewServer(sbaStore)
 
-	err = sbaServer.Start(serverAddress)
+	err = sbaServer.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatal("Failed to start Server", err)
 	}
