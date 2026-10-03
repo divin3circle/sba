@@ -22,4 +22,8 @@ server:
 test:
 	go test -v -cover ./...
 
-.PHONY: createdb dropdb postgres migratedown migrateup server
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/divin3circle/sba/db/sqlc Store
+
+
+.PHONY: createdb dropdb postgres migratedown migrateup server mock
