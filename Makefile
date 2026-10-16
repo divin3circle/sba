@@ -1,6 +1,9 @@
 postgres:
 	docker run --name sba-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres:16-alpine
 
+start:
+	docker start sba-postgres
+
 createdb:
 	docker exec -it sba-postgres createdb --username=postgres --owner=postgres sba_db
 

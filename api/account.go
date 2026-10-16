@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	`errors`
 	"net/http"
 
 	db "github.com/divin3circle/sba/db/sqlc"
@@ -10,7 +11,7 @@ import (
 
 type CreateAccountRequest struct {
 	Owner    string `json:"owner" binding:"required"`
-	Currency string `json:"currency" binding:"required,oneof=USD KES EUR CAD"`
+	Currency string `json:"currency" binding:"required,currency`
 }
 
 func (s *Server) createAccount(ctx *gin.Context) {
@@ -48,7 +49,7 @@ func (s *Server) getAccountByID(ctx *gin.Context) {
 
 	account, err := s.store.GetAccount(ctx, req.ID)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			ctx.JSON(http.StatusNotFound, ErrorResponse(err))
 			return
 		}
